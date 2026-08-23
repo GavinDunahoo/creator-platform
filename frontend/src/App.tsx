@@ -45,7 +45,7 @@ function GamePage() {
     setRoundNumber((current) => current === rounds.length ? 1 : current + 1);
   }
 
-  function dropPin(event: MouseEvent<HTMLButtonElement>) {
+  function dropPin(event: MouseEvent<HTMLElement>) {
     if (submitted) return;
     const bounds = event.currentTarget.getBoundingClientRect();
     const column = Math.min(5, Math.max(1, Math.floor(((event.clientX - bounds.left) / bounds.width) * 6) + 1));
@@ -71,13 +71,11 @@ function GamePage() {
       <section className="round-layout">
         <div className="video-panel">
           <div className="footage-frame">
-            <div className={`street-scene ${round.scene}`}>
-              <div className="building building-left" />
-              <div className="building building-right" />
-              <div className="street-sign" />
-              <div className="car car-one" />
-              <div className="car car-two" />
-              <div className="road-marking" />
+            <div className="media-player-placeholder">
+              <span className="media-placeholder-kicker">MEDIA PLAYER PLACEHOLDER</span>
+              <strong>Drop your bodycam footage here</strong>
+              <span className="media-placeholder-detail">Connect your preferred video provider to begin playback.</span>
+              <div className="media-placeholder-icon">▶</div>
             </div>
             <div className="camera-overlay">
               <span className="recording-indicator"><i /> REC</span>
@@ -101,22 +99,14 @@ function GamePage() {
 
           <fieldset className="guess-group map-group">
             <legend><b>01</b> Drop your pin</legend>
-            <button className="map-canvas" type="button" onClick={dropPin} aria-label="Click the map to drop your location pin">
-              <span className="map-water" />
-              <span className="map-road map-road-one" />
-              <span className="map-road map-road-two" />
-              <span className="map-road map-road-three" />
-              <span className="map-road map-road-four" />
-              <span className="map-label map-label-one">Seattle</span>
-              <span className="map-label map-label-two">Lake Washington</span>
-              <span className="map-label map-label-three">Bellevue</span>
-              <span className="map-control map-plus">+</span>
-              <span className="map-control map-minus">−</span>
+            <div className="map-canvas" aria-label="Google map for dropping a location pin">
+              <iframe title="Google Maps location map" src="https://www.google.com/maps?q=Seattle%2C%20Washington&output=embed" loading="lazy" />
+              <button className="map-click-layer" type="button" onClick={dropPin} aria-label="Click the map to drop your location pin" />
               {submitted && pin ? <svg className="answer-connector" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1={pinPoint(pin.column, pin.row).x} y1={pinPoint(pin.column, pin.row).y} x2={pinPoint(round.answerColumn, round.answerRow).x} y2={pinPoint(round.answerColumn, round.answerRow).y} /></svg> : null}
               {pin ? <span className={`dropped-pin pin-column-${pin.column} pin-row-${pin.row}`}><i /></span> : null}
               {submitted ? <span className={`answer-pin pin-column-${round.answerColumn} pin-row-${round.answerRow}`}><i /></span> : null}
               <span className="map-provider">Google Maps</span>
-            </button>
+            </div>
             <p className="map-hint">{submitted ? `Answer: ${round.answerLocation}` : pin ? "Pin dropped — click anywhere to reposition" : "Click the map to place your best guess"}</p>
           </fieldset>
           <fieldset className="guess-group year-group">
