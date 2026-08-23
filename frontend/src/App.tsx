@@ -1,7 +1,11 @@
-import { useEffect, useRef, useState, type MouseEvent, type PointerEvent, type WheelEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 
 type Guess = "location" | "year" | "agency";
+
+declare global {
+  interface Window { google?: any; }
+}
 
 const agencies = ["Seattle Police", "King County Sheriff", "Washington State Patrol"];
 const rounds = [
@@ -31,9 +35,8 @@ function GamePage() {
   const [roundNumber, setRoundNumber] = useState(1);
   const [pin, setPin] = useState<{ column: number; row: number } | null>(null);
   const [mapZoom, setMapZoom] = useState(11);
-  const [mapOffset, setMapOffset] = useState({ x: 0, y: 0 });
-  const dragStart = useRef<{ x: number; y: number } | null>(null);
-  const dragged = useRef(false);
+  const mapElement = useRef<HTMLDivElement>(null);
+  const googleMap = useRef<any>(null);
   const round = rounds[roundNumber - 1];
   const complete = Boolean(pin) && selection.year !== "" && selection.agency !== "";
   const pinPoint = (column: number, row: number) => ({ x: 17 + (column - 1) * 16.5, y: 20 + (row - 1) * 20 });
@@ -46,45 +49,35 @@ function GamePage() {
     setSelection({ location: "", year: "", agency: "" });
     setPin(null);
     setMapZoom(11);
-    setMapOffset({ x: 0, y: 0 });
     setSubmitted(false);
     setRoundNumber((current) => current === rounds.length ? 1 : current + 1);
   }
 
-  function dropPin(event: MouseEvent<HTMLElement>) {
-    if (submitted) return;
-    const bounds = event.currentTarget.getBoundingClientRect();
-    const column = Math.min(5, Math.max(1, Math.floor(((event.clientX - bounds.left) / bounds.width) * 6) + 1));
-    const row = Math.min(4, Math.max(1, Math.floor(((event.clientY - bounds.top) / bounds.height) * 5) + 1));
-    setPin({ column, row });
-  }
+  useEffect(() => {
+    const initializeMap = () => {
+      if (!mapElement.current || !window.google) return;
+      const map = new window.google.maps.Map(mapElement.current, { center: { lat: 47.6062, lng: -122.3321 }, zoom: mapZoom, gestureHandling: "greedy", mapTypeControl: false, streetViewControl: false, fullscreenControl: false });
+      googleMap.current = map;
+      map.addListener("zoom_changed", () => setMapZoom(map.getZoom() ?? 11));
+      map.addListener("click", (event: any) => {
+        if (submitted || !event.latLng) return;
+        const bounds = mapElement.current?.getBoundingClientRect();
+        if (!bounds) return;
+        const domEvent = event.domEvent as globalThis.MouseEvent;
+        setPin({ column: Math.min(5, Math.max(1, Math.floor(((domEvent.clientX - bounds.left) / bounds.width) * 6) + 1)), row: Math.min(4, Math.max(1, Math.floor(((domEvent.clientY - bounds.top) / bounds.height) * 5) + 1)) });
+        new window.google.maps.Marker({ map, position: event.latLng, title: "Your guess" });
+      });
+    };
+    if (window.google) initializeMap();
+    else {
+      const script = document.createElement("script");
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
+      script.async = true;
+      script.onload = initializeMap;
+      document.head.appendChild(script);
+    }
+  }, []);
 
-  function beginMapDrag(event: PointerEvent<HTMLDivElement>) {
-    if (submitted) return;
-    dragStart.current = { x: event.clientX, y: event.clientY };
-    dragged.current = false;
-    event.currentTarget.setPointerCapture(event.pointerId);
-  }
-
-  function moveMap(event: PointerEvent<HTMLDivElement>) {
-    if (!dragStart.current || submitted) return;
-    const distanceX = event.clientX - dragStart.current.x;
-    const distanceY = event.clientY - dragStart.current.y;
-    if (Math.abs(distanceX) > 8 || Math.abs(distanceY) > 8) dragged.current = true;
-    if (dragged.current) setMapOffset({ x: Math.max(-2, Math.min(2, Math.round(distanceX / 90))), y: Math.max(-2, Math.min(2, Math.round(distanceY / 70))) });
-  }
-
-  function endMapDrag(event: PointerEvent<HTMLDivElement>) {
-    if (!dragStart.current) return;
-    if (!dragged.current) dropPin(event);
-    dragStart.current = null;
-    event.currentTarget.releasePointerCapture(event.pointerId);
-  }
-
-  function zoomMap(event: WheelEvent<HTMLDivElement>) {
-    event.preventDefault();
-    setMapZoom((current) => Math.max(1, Math.min(19, current + (event.deltaY < 0 ? 1 : -1))));
-  }
 
   return (
     <main className="game-shell">
@@ -132,12 +125,12 @@ function GamePage() {
 
           <fieldset className="guess-group map-group">
             <legend><b>01</b> Drop your pin</legend>
-            <div className={`map-canvas map-offset-x-${mapOffset.x} map-offset-y-${mapOffset.y}`} aria-label="Google map for dropping a location pin" onPointerDown={beginMapDrag} onPointerMove={moveMap} onPointerUp={endMapDrag} onWheel={zoomMap}>
-              <iframe title="Google Maps location map" src={`https://www.google.com/maps?q=Seattle%2C%20Washington&z=${mapZoom}&output=embed`} loading="lazy" />
+            <div className="map-canvas" aria-label="Google map for dropping a location pin">
+              <div className="google-map" ref={mapElement} />
               {submitted && pin ? <svg className="answer-connector" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1={pinPoint(pin.column, pin.row).x} y1={pinPoint(pin.column, pin.row).y} x2={pinPoint(round.answerColumn, round.answerRow).x} y2={pinPoint(round.answerColumn, round.answerRow).y} /></svg> : null}
               {pin ? <span className={`dropped-pin pin-column-${pin.column} pin-row-${pin.row}`}><i /></span> : null}
               {submitted ? <span className={`answer-pin pin-column-${round.answerColumn} pin-row-${round.answerRow}`}><i /></span> : null}
-              <div className="map-zoom-controls"><button type="button" onPointerDown={(event) => event.stopPropagation()} onClick={() => setMapZoom((current) => Math.min(19, current + 1))} aria-label="Zoom in">+</button><button type="button" onPointerDown={(event) => event.stopPropagation()} onClick={() => setMapZoom((current) => Math.max(1, current - 1))} aria-label="Zoom out">−</button></div>
+              <div className="map-zoom-controls"><button type="button" onClick={() => googleMap.current?.setZoom(Math.min(19, (googleMap.current.getZoom() ?? mapZoom) + 1))} aria-label="Zoom in">+</button><button type="button" onClick={() => googleMap.current?.setZoom(Math.max(1, (googleMap.current.getZoom() ?? mapZoom) - 1))} aria-label="Zoom out">−</button></div>
               <span className="map-provider">Google Maps</span>
             </div>
             <p className="map-hint">{submitted ? `Answer: ${round.answerLocation}` : pin ? "Drag or scroll to explore · click to reposition" : "Click and hold to drag · scroll to zoom · click to pin"}</p>
