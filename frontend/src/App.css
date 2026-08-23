@@ -32,7 +32,7 @@ button { font: inherit; }
   margin: 0 auto;
   padding: 24px 2vw;
   display: grid;
-  grid-template-columns: minmax(0, 2.6fr) minmax(350px, .8fr);
+  grid-template-columns: minmax(0, 3fr) minmax(350px, .8fr);
   align-items: start;
   gap: clamp(28px, 6vw, 100px);
 }
