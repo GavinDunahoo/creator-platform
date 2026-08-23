@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 import "./App.css";
 
 type Guess = "location" | "year" | "agency";
 
-const locations = ["Downtown Seattle", "Tacoma, WA", "Portland, OR"];
 const years = ["2017", "2019", "2021"];
 const agencies = ["Seattle Police", "King County Sheriff", "Washington State Patrol"];
 
@@ -23,7 +22,8 @@ function App() {
     agency: "",
   });
   const [submitted, setSubmitted] = useState(false);
-  const complete = Object.values(selection).every(Boolean);
+  const [pin, setPin] = useState<{ column: number; row: number } | null>(null);
+  const complete = Boolean(pin) && selection.year !== "" && selection.agency !== "";
 
   function selectGuess(category: Guess, value: string) {
     if (!submitted) setSelection((current) => ({ ...current, [category]: value }));
@@ -31,7 +31,16 @@ function App() {
 
   function newRound() {
     setSelection({ location: "", year: "", agency: "" });
+    setPin(null);
     setSubmitted(false);
+  }
+
+  function dropPin(event: MouseEvent<HTMLButtonElement>) {
+    if (submitted) return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const column = Math.min(5, Math.max(1, Math.floor(((event.clientX - bounds.left) / bounds.width) * 6) + 1));
+    const row = Math.min(4, Math.max(1, Math.floor(((event.clientY - bounds.top) / bounds.height) * 5) + 1));
+    setPin({ column, row });
   }
 
   return (
@@ -82,11 +91,23 @@ function App() {
             <span>Use the visual details to make your best call.</span>
           </div>
 
-          <fieldset className="guess-group">
-            <legend><b>01</b> Location</legend>
-            <div className="guess-options">
-              {locations.map((item) => <button className={selection.location === item ? "option-button selected" : "option-button"} onClick={() => selectGuess("location", item)} type="button" key={item}>{item}</button>)}
-            </div>
+          <fieldset className="guess-group map-group">
+            <legend><b>01</b> Drop your pin</legend>
+            <button className="map-canvas" type="button" onClick={dropPin} aria-label="Click the map to drop your location pin">
+              <span className="map-water" />
+              <span className="map-road map-road-one" />
+              <span className="map-road map-road-two" />
+              <span className="map-road map-road-three" />
+              <span className="map-road map-road-four" />
+              <span className="map-label map-label-one">Seattle</span>
+              <span className="map-label map-label-two">Lake Washington</span>
+              <span className="map-label map-label-three">Bellevue</span>
+              <span className="map-control map-plus">+</span>
+              <span className="map-control map-minus">−</span>
+              {pin ? <span className={`dropped-pin pin-column-${pin.column} pin-row-${pin.row}`}><i /></span> : null}
+              <span className="map-provider">Google Maps</span>
+            </button>
+            <p className="map-hint">{pin ? "Pin dropped — click anywhere to reposition" : "Click the map to place your best guess"}</p>
           </fieldset>
           <fieldset className="guess-group">
             <legend><b>02</b> Year</legend>
