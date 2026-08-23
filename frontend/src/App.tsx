@@ -124,6 +124,7 @@ function GamePage() {
           <fieldset className="guess-group year-group">
             <legend><b>02</b> Year <strong>{selection.year || "2021"}</strong></legend>
             <div className="year-slider-wrap">
+              <div className="year-track"><span className={`year-track-fill year-fill-${Math.round(((Number(selection.year || "2021") - 1990) / 34) * 10)}`} /></div>
               <input className="year-slider" type="range" min="1990" max="2024" value={selection.year || "2021"} onChange={(event) => selectGuess("year", event.target.value)} disabled={submitted} aria-label="Select the year" />
               <div className="year-range-labels"><span>1990</span><span>2024</span></div>
             </div>
