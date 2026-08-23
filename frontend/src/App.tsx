@@ -121,7 +121,6 @@ function GamePage() {
             <div className="map-canvas" aria-label="Google map for dropping a location pin">
               <div className="google-map" ref={mapElement} />
               {submitted && pin ? <svg className="answer-connector" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1={pinPoint(pin.column, pin.row).x} y1={pinPoint(pin.column, pin.row).y} x2={pinPoint(round.answerColumn, round.answerRow).x} y2={pinPoint(round.answerColumn, round.answerRow).y} /></svg> : null}
-              {pin ? <span className={`dropped-pin pin-column-${pin.column} pin-row-${pin.row}`}><i /></span> : null}
               {submitted ? <span className={`answer-pin pin-column-${round.answerColumn} pin-row-${round.answerRow}`}><i /></span> : null}
               <div className="map-zoom-controls"><button type="button" onClick={() => googleMap.current?.setZoom(Math.min(19, (googleMap.current.getZoom() ?? mapZoom) + 1))} aria-label="Zoom in">+</button><button type="button" onClick={() => googleMap.current?.setZoom(Math.max(1, (googleMap.current.getZoom() ?? mapZoom) - 1))} aria-label="Zoom out">−</button></div>
               <span className="map-provider">Google Maps</span>
