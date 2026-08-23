@@ -37,6 +37,7 @@ function GamePage() {
   const [mapZoom, setMapZoom] = useState(11);
   const mapElement = useRef<HTMLDivElement>(null);
   const googleMap = useRef<any>(null);
+  const guessMarker = useRef<any>(null);
   const round = rounds[roundNumber - 1];
   const complete = Boolean(pin) && selection.year !== "" && selection.agency !== "";
   const pinPoint = (column: number, row: number) => ({ x: 17 + (column - 1) * 16.5, y: 20 + (row - 1) * 20 });
@@ -47,6 +48,8 @@ function GamePage() {
 
   function newRound() {
     setSelection({ location: "", year: "", agency: "" });
+    guessMarker.current?.setMap(null);
+    guessMarker.current = null;
     setPin(null);
     setMapZoom(11);
     setSubmitted(false);
@@ -65,7 +68,8 @@ function GamePage() {
         if (!bounds) return;
         const domEvent = event.domEvent as globalThis.MouseEvent;
         setPin({ column: Math.min(5, Math.max(1, Math.floor(((domEvent.clientX - bounds.left) / bounds.width) * 6) + 1)), row: Math.min(4, Math.max(1, Math.floor(((domEvent.clientY - bounds.top) / bounds.height) * 5) + 1)) });
-        new window.google.maps.Marker({ map, position: event.latLng, title: "Your guess" });
+        if (guessMarker.current) guessMarker.current.setPosition(event.latLng);
+        else guessMarker.current = new window.google.maps.Marker({ map, position: event.latLng, title: "Your guess" });
       });
     };
     if (window.google) initializeMap();
@@ -117,12 +121,11 @@ function GamePage() {
             <div className="map-canvas" aria-label="Google map for dropping a location pin">
               <div className="google-map" ref={mapElement} />
               {submitted && pin ? <svg className="answer-connector" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1={pinPoint(pin.column, pin.row).x} y1={pinPoint(pin.column, pin.row).y} x2={pinPoint(round.answerColumn, round.answerRow).x} y2={pinPoint(round.answerColumn, round.answerRow).y} /></svg> : null}
-              {pin ? <span className={`dropped-pin pin-column-${pin.column} pin-row-${pin.row}`}><i /></span> : null}
               {submitted ? <span className={`answer-pin pin-column-${round.answerColumn} pin-row-${round.answerRow}`}><i /></span> : null}
               <div className="map-zoom-controls"><button type="button" onClick={() => googleMap.current?.setZoom(Math.min(19, (googleMap.current.getZoom() ?? mapZoom) + 1))} aria-label="Zoom in">+</button><button type="button" onClick={() => googleMap.current?.setZoom(Math.max(1, (googleMap.current.getZoom() ?? mapZoom) - 1))} aria-label="Zoom out">−</button></div>
               <span className="map-provider">Google Maps</span>
             </div>
-            <p className="map-hint">{submitted ? `Answer: ${round.answerLocation}` : pin ? "Drag or scroll to explore · click to reposition" : "Click and hold to drag · scroll to zoom · click to pin"}</p>
+            <p className="map-hint">{submitted ? `Answer: ${round.answerLocation}` : pin ? "Pin placed · drag or scroll to explore" : "Click and hold to drag · scroll to zoom · click to pin"}</p>
           </fieldset>
           <fieldset className="guess-group year-group">
             <legend><b>02</b> Year <strong>{selection.year || "2021"}</strong></legend>
