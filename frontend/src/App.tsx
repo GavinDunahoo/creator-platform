@@ -14,7 +14,7 @@ function ShieldIcon() {
   );
 }
 
-function App() {
+function GamePage() {
   const [selection, setSelection] = useState<Record<Guess, string>>({
     location: "",
     year: "",
@@ -140,6 +140,48 @@ function App() {
       </footer>
     </main>
   );
+}
+
+function LandingPage() {
+  return (
+    <main className="landing-shell">
+      <header className="landing-header">
+        <a className="brand" href="/" aria-label="CamGuessr home">
+          <span className="brand-mark"><ShieldIcon /></span>
+          <span>CAM<span>GUESSR</span></span>
+        </a>
+        <span className="landing-edition">FIELD EDITION / 001</span>
+      </header>
+      <section className="landing-hero">
+        <div className="landing-copy">
+          <p className="eyebrow">THE BODYCAM LOCATION GAME</p>
+          <h1>Read the scene.<br /><em>Find the story.</em></h1>
+          <p className="landing-intro">Put your instincts to the test. Watch real-world bodycam footage, study the details, and pin down where and when it happened.</p>
+          <a className="landing-play" href="/play">Play CamGuessr <span>→</span></a>
+          <p className="landing-note"><span className="live-mark" /> Five rounds. One perfect read.</p>
+        </div>
+        <div className="landing-visual" aria-label="CamGuessr bodycam preview">
+          <div className="landing-grid" />
+          <div className="landing-scene">
+            <div className="landing-building landing-building-one" /><div className="landing-building landing-building-two" /><div className="landing-road" /><div className="landing-lamp" /><div className="landing-person" />
+          </div>
+          <div className="landing-stamp">PNW<br /><strong>01</strong></div>
+          <div className="landing-rec"><i /> BODYCAM / 16:42:08</div>
+          <div className="landing-caption">EVERY FRAME<br /><span>IS A CLUE</span></div>
+        </div>
+      </section>
+      <section className="landing-details">
+        <div><strong>01</strong><p><b>Watch closely</b><br />Every visual detail matters.</p></div>
+        <div><strong>02</strong><p><b>Make your call</b><br />Pin a place, set a year, name the agency.</p></div>
+        <div><strong>03</strong><p><b>Trust your read</b><br />See how close you got.</p></div>
+      </section>
+      <footer className="landing-footer"><span>CAMGUESSR <i>—</i> Train your eye. Test your instincts.</span><span>Built for the curious.</span></footer>
+    </main>
+  );
+}
+
+function App() {
+  return window.location.pathname === "/play" ? <GamePage /> : <LandingPage />;
 }
 
 export default App;
