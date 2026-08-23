@@ -183,7 +183,7 @@ function LandingPage() {
         <nav className="landing-nav"><a href="#how-it-works">How it works</a><a href="#modes">Game modes</a><a className="nav-play" href="/play">Play now <span>→</span></a></nav>
       </header>
       <section className="landing-hero">
-        <div className="landing-copy"><h1>Where did this footage happen?</h1><p className="landing-intro">Watch the footage, spot the clues, and pinpoint the location on the map.</p><a className="landing-play" href="/play">Play CamGuessr <span>→</span></a><p className="landing-note"><span className="live-mark" /> Five rounds. One perfect read.</p></div>
+        <div className="landing-copy"><h1>Where did this footage happen?</h1><a className="landing-play" href="/play">Play CamGuessr <span>→</span></a></div>
         <div className={`landing-visual snapshot-${snapshot + 1}`} aria-label="CamGuessr gameplay preview">
           <div className="preview-video"><span className="preview-video-top"><i /> LIVE FOOTAGE <b>00:18</b></span><div className="preview-road" /><div className="preview-window preview-window-one" /><div className="preview-window preview-window-two" /><span className="preview-video-bottom">BODYCAM FOOTAGE · 00:18</span></div>
           <div className="preview-map"><div className="preview-map-lines" /><span className="preview-map-label">SEATTLE</span><span className="preview-pin"><i /></span><span className="preview-map-tag">YOUR GUESS</span><div className="preview-map-footer">MAP VIEW <b>+</b></div></div>
