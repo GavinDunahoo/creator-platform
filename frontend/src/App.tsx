@@ -179,35 +179,19 @@ function LandingPage() {
   return (
     <main className="landing-shell">
       <header className="landing-header">
-        <a className="brand" href="/" aria-label="CamGuessr home">
-          <span className="brand-mark"><ShieldIcon /></span>
-          <span>CAM<span>GUESSR</span></span>
-        </a>
-        <span className="landing-edition">FIELD EDITION / 001</span>
+        <a className="brand" href="/" aria-label="CamGuessr home"><span className="brand-mark"><ShieldIcon /></span><span>CAM<span>GUESSR</span></span></a>
+        <nav className="landing-nav"><a href="#how-it-works">How it works</a><a href="#modes">Game modes</a><a className="nav-play" href="/play">Play now <span>→</span></a></nav>
       </header>
       <section className="landing-hero">
-        <div className="landing-copy">
-          <p className="eyebrow">THE BODYCAM LOCATION GAME</p>
-          <h1>Read the scene.<br /><em>Find the story.</em></h1>
-          <p className="landing-intro">Put your instincts to the test. Watch real-world bodycam footage, study the details, and pin down where and when it happened.</p>
-          <a className="landing-play" href="/play">Play CamGuessr <span>→</span></a>
-          <p className="landing-note"><span className="live-mark" /> Five rounds. One perfect read.</p>
-        </div>
-        <div className={`landing-visual snapshot-${snapshot + 1}`} aria-label="CamGuessr bodycam preview">
-          <div className="landing-grid" />
-          <div className="landing-scene">
-            <div className="landing-building landing-building-one" /><div className="landing-building landing-building-two" /><div className="landing-road" /><div className="landing-lamp" /><div className="landing-person" />
-          </div>
-          <div className="landing-stamp">{snapshot === 0 ? "PNW" : snapshot === 1 ? "MTN" : "GULF"}<br /><strong>0{snapshot + 1}</strong></div>
-          <div className="landing-rec"><i /> BODYCAM / {snapshot === 0 ? "16:42:08" : snapshot === 1 ? "08:17:41" : "22:05:16"}</div>
-          <div className="landing-caption">EVERY FRAME<br /><span>IS A CLUE</span></div>
+        <div className="landing-copy"><p className="eyebrow">THE BODYCAM LOCATION GAME</p><h1>Where did this<br /><em>bodycam footage</em><br />happen?</h1><p className="landing-intro">Watch real bodycam footage, look for clues, and pinpoint where it happened on the map.</p><a className="landing-play" href="/play">Play CamGuessr <span>→</span></a><p className="landing-note"><span className="live-mark" /> Five rounds. One perfect read.</p></div>
+        <div className={`landing-visual snapshot-${snapshot + 1}`} aria-label="CamGuessr gameplay preview">
+          <div className="preview-video"><span className="preview-video-top"><i /> LIVE FOOTAGE <b>00:18</b></span><div className="preview-road" /><div className="preview-window preview-window-one" /><div className="preview-window preview-window-two" /><span className="preview-video-bottom">AXON BODY 3 · 2021-07-14</span></div>
+          <div className="preview-map"><div className="preview-map-lines" /><span className="preview-map-label">SEATTLE</span><span className="preview-pin"><i /></span><span className="preview-map-tag">YOUR GUESS</span><div className="preview-map-footer">MAP VIEW <b>+</b></div></div>
+          <div className="preview-step"><span>WATCH</span><i>→</i><span>PIN</span><i>→</i><span>SCORE</span></div>
         </div>
       </section>
-      <section className="landing-details">
-        <div><strong>01</strong><p><b>Watch closely</b><br />Every visual detail matters.</p></div>
-        <div><strong>02</strong><p><b>Make your call</b><br />Pin a place, set a year, name the agency.</p></div>
-        <div><strong>03</strong><p><b>Trust your read</b><br />See how close you got.</p></div>
-      </section>
+      <section className="landing-details" id="how-it-works"><div className="section-heading"><p className="eyebrow">HOW IT WORKS</p><h2>Every frame is a clue.</h2></div><div className="detail-card"><strong>01</strong><span className="detail-icon">◉</span><p><b>Watch the footage</b><br />Look for signs, businesses, road markings, architecture, and other location clues.</p></div><div className="detail-card"><strong>02</strong><span className="detail-icon">⌖</span><p><b>Make your guess</b><br />Drop a pin, set the year, and choose the agency.</p></div><div className="detail-card"><strong>03</strong><span className="detail-icon">↗</span><p><b>See how close you were</b><br />Reveal the answer and earn points based on distance.</p></div></section>
+      <section className="mode-section" id="modes"><div className="section-heading"><p className="eyebrow">CHOOSE YOUR RUN</p><h2>Pick a way to play.</h2></div><div className="mode-grid"><a className="mode-card mode-featured" href="/play"><span className="mode-number">01</span><span className="mode-arrow">↗</span><h3>Classic</h3><p>Five random bodycam locations. How sharp is your eye?</p><span className="mode-link">PLAY NOW</span></a><a className="mode-card" href="/play"><span className="mode-number">02</span><span className="mode-arrow">↗</span><h3>Daily Challenge</h3><p>Everyone gets the same locations. Compare your score.</p><span className="mode-link">COMING SOON</span></a><a className="mode-card" href="/play"><span className="mode-number">03</span><span className="mode-arrow">↗</span><h3>Multiplayer</h3><p>Challenge friends and see who can read the scene fastest.</p><span className="mode-link">COMING SOON</span></a></div></section>
       <footer className="landing-footer"><span>CAMGUESSR <i>—</i> Train your eye. Test your instincts.</span><span>Built for the curious.</span></footer>
     </main>
   );
