@@ -30,9 +30,9 @@ button { font: inherit; }
   width: min(1380px, 100%);
   min-height: calc(100svh - 128px);
   margin: 0 auto;
-  padding: 32px 3vw;
+  padding: 24px 2vw;
   display: grid;
-  grid-template-columns: minmax(0, 2.2fr) minmax(350px, .8fr);
+  grid-template-columns: minmax(0, 2.6fr) minmax(350px, .8fr);
   align-items: start;
   gap: clamp(28px, 6vw, 100px);
 }
