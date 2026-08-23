@@ -26,7 +26,17 @@ button { font: inherit; }
 .progress-track { width: 76px; height: 3px; background: #2b3831; overflow: hidden; }.progress-track span { display: block; width: 60%; height: 100%; background: var(--pine); }
 .how-to-play { justify-self: end; border: 0; color: var(--ink); background: transparent; cursor: pointer; font-size: 13px; }.how-to-play span { width: 18px; height: 18px; margin-left: 5px; border: 1px solid var(--ink); border-radius: 50%; display: inline-grid; place-items: center; font: 11px/1 'DM Mono', monospace; }
 
-.round-layout { width: min(1380px, 100%); min-height: calc(100svh - 128px); margin: 0 auto; padding: 42px 4.8vw; display: grid; grid-template-columns: minmax(0, 1.9fr) minmax(350px, .8fr); align-items: start; gap: clamp(28px, 6vw, 100px); }
+.round-layout {
+  width: min(1380px, 100%);
+  min-height: calc(100svh - 128px);
+  margin: 0 auto;
+  padding: 42px 4.8vw;
+  display: grid;
+  grid-template-columns: minmax(0, 1.9fr) minmax(350px, .8fr);
+  align-items: start;
+  gap: clamp(28px, 6vw, 100px);
+}
+
 .video-panel { min-width: 0; }
 .footage-frame {
   width: 100%;
