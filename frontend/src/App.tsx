@@ -31,6 +31,7 @@ function GamePage() {
   const [roundNumber, setRoundNumber] = useState(1);
   const [pin, setPin] = useState<{ column: number; row: number } | null>(null);
   const [mapZoom, setMapZoom] = useState(11);
+  const [pinMode, setPinMode] = useState(false);
   const round = rounds[roundNumber - 1];
   const complete = Boolean(pin) && selection.year !== "" && selection.agency !== "";
   const pinPoint = (column: number, row: number) => ({ x: 17 + (column - 1) * 16.5, y: 20 + (row - 1) * 20 });
@@ -43,6 +44,7 @@ function GamePage() {
     setSelection({ location: "", year: "", agency: "" });
     setPin(null);
     setMapZoom(11);
+    setPinMode(false);
     setSubmitted(false);
     setRoundNumber((current) => current === rounds.length ? 1 : current + 1);
   }
@@ -53,6 +55,7 @@ function GamePage() {
     const column = Math.min(5, Math.max(1, Math.floor(((event.clientX - bounds.left) / bounds.width) * 6) + 1));
     const row = Math.min(4, Math.max(1, Math.floor(((event.clientY - bounds.top) / bounds.height) * 5) + 1));
     setPin({ column, row });
+    setPinMode(false);
   }
 
   return (
@@ -103,14 +106,15 @@ function GamePage() {
             <legend><b>01</b> Drop your pin</legend>
             <div className="map-canvas" aria-label="Google map for dropping a location pin">
               <iframe title="Google Maps location map" src={`https://www.google.com/maps?q=Seattle%2C%20Washington&z=${mapZoom}&output=embed`} loading="lazy" />
-              <button className="map-click-layer" type="button" onClick={dropPin} aria-label="Click the map to drop your location pin" />
+              {pinMode ? <button className="map-click-layer" type="button" onClick={dropPin} aria-label="Click the map to drop your location pin" /> : null}
               {submitted && pin ? <svg className="answer-connector" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1={pinPoint(pin.column, pin.row).x} y1={pinPoint(pin.column, pin.row).y} x2={pinPoint(round.answerColumn, round.answerRow).x} y2={pinPoint(round.answerColumn, round.answerRow).y} /></svg> : null}
               {pin ? <span className={`dropped-pin pin-column-${pin.column} pin-row-${pin.row}`}><i /></span> : null}
               {submitted ? <span className={`answer-pin pin-column-${round.answerColumn} pin-row-${round.answerRow}`}><i /></span> : null}
+              {!submitted ? <button className={pinMode ? "map-mode-toggle active" : "map-mode-toggle"} type="button" onClick={() => setPinMode((current) => !current)}>{pinMode ? "Click map to place pin" : "Drop pin"}</button> : null}
               <div className="map-zoom-controls"><button type="button" onClick={() => setMapZoom((current) => Math.min(19, current + 1))} aria-label="Zoom in">+</button><button type="button" onClick={() => setMapZoom((current) => Math.max(1, current - 1))} aria-label="Zoom out">−</button></div>
               <span className="map-provider">Google Maps</span>
             </div>
-            <p className="map-hint">{submitted ? `Answer: ${round.answerLocation}` : pin ? "Pin dropped — click anywhere to reposition" : "Click the map to place your best guess"}</p>
+            <p className="map-hint">{submitted ? `Answer: ${round.answerLocation}` : pinMode ? "Click the map to place your pin" : pin ? "Map is live — drag or scroll to explore" : "Explore the map, then drop your best guess"}</p>
           </fieldset>
           <fieldset className="guess-group year-group">
             <legend><b>02</b> Year <strong>{selection.year || "2021"}</strong></legend>
