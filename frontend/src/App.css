@@ -27,7 +27,16 @@ button { font: inherit; }
 .how-to-play { justify-self: end; border: 0; color: var(--ink); background: transparent; cursor: pointer; font-size: 13px; }.how-to-play span { width: 18px; height: 18px; margin-left: 5px; border: 1px solid var(--ink); border-radius: 50%; display: inline-grid; place-items: center; font: 11px/1 'DM Mono', monospace; }
 
 .round-layout { width: min(1380px, 100%); min-height: calc(100svh - 128px); margin: 0 auto; padding: 42px 4.8vw; display: grid; grid-template-columns: minmax(0, 1.9fr) minmax(350px, .8fr); align-items: start; gap: clamp(28px, 6vw, 100px); }
-.video-panel { min-width: 0; }.footage-frame { min-height: 620px; overflow: hidden; position: relative; color: #fff; background: #4c5d57; box-shadow: 0 24px 60px rgba(22, 43, 32, .2); }
+.video-panel { min-width: 0; }
+.footage-frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  position: relative;
+  color: #fff;
+  background: #000;
+  box-shadow: 0 24px 60px rgba(22, 43, 32, .2);
+}
 .street-scene { position: absolute; inset: 0; overflow: hidden; background: linear-gradient(180deg, #b6c2ba 0 26%, #70877d 27% 38%, #576e65 39% 48%, #8d9590 49% 100%); }
 .street-scene::after { content: ''; position: absolute; inset: 0; background: linear-gradient(100deg, rgba(0,0,0,.14), transparent 48%, rgba(0,0,0,.2)), repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 4px); mix-blend-mode: multiply; }
 .building { position: absolute; background: linear-gradient(100deg, #59645d, #748076); }.building-left { width: 28%; height: 62%; left: -1%; top: 15%; transform: skewY(8deg); }.building-right { width: 34%; height: 57%; right: -5%; top: 21%; transform: skewY(-7deg); background: linear-gradient(100deg, #50645b, #718078); }.building::after { content: ''; position: absolute; inset: 13% 12%; opacity: .45; background: repeating-linear-gradient(90deg, #2b433a 0 17%, transparent 17% 27%); }
@@ -39,8 +48,8 @@ button { font: inherit; }
 .submit-guess { width: 100%; min-height: 53px; margin-top: 4px; padding: 0 18px; border: 0; color: #10241e; background: var(--lime); cursor: pointer; display: flex; justify-content: space-between; align-items: center; font: 600 14px/1 'Space Grotesk', sans-serif; transition: opacity .15s; }.submit-guess span { font-size: 21px; font-weight: 400; }.submit-guess:disabled { opacity: .4; cursor: not-allowed; }.result-panel { margin: -4px 0 13px; padding: 11px 13px; border-left: 3px solid #88a944; color: var(--pine); background: #1d2a1e; display: grid; gap: 3px; font-size: 12px; }.result-panel span { color: #648062; }.next-round { width: 100%; min-height: 45px; margin-top: 9px; padding: 9px; border: 1px solid var(--pine); color: var(--pine); background: #1b281d; cursor: pointer; font-size: 12px; transition: background .15s, color .15s; }.next-round:hover, .next-round:focus-visible { color: #142318; background: var(--pine); outline: none; }
 .game-shell, .landing-shell { width: 100%; }.game-footer { min-height: 46px; padding: 0 4.8vw; border-top: 1px solid var(--line); color: var(--muted); display: flex; align-items: center; justify-content: space-between; font: 10px/1 'DM Mono', monospace; letter-spacing: .03em; }
 
-@media (max-width: 800px) { .game-header { height: 67px; padding: 0 20px; grid-template-columns: 1fr auto; }.round-progress { display: none; }.how-to-play { font-size: 0; }.how-to-play span { margin: 0; font-size: 11px; }.round-layout { padding: 24px 20px 38px; grid-template-columns: 1fr; gap: 34px; }.footage-frame { min-height: 360px; }.guess-card { max-width: none; }.game-footer { padding: 0 20px; }.game-footer span:last-child { display: none; } }
-@media (max-width: 450px) { .footage-frame { min-height: 290px; }.camera-overlay { top: 15px; left: 15px; right: 15px; }.camera-readout { bottom: 15px; left: 15px; }.footage-caption { display: none; }.game-footer { font-size: 8px; } }
+@media (max-width: 800px) { .game-header { height: 67px; padding: 0 20px; grid-template-columns: 1fr auto; }.round-progress { display: none; }.how-to-play { font-size: 0; }.how-to-play span { margin: 0; font-size: 11px; }.round-layout { padding: 24px 20px 38px; grid-template-columns: 1fr; gap: 34px; }.guess-card { max-width: none; }.game-footer { padding: 0 20px; }.game-footer span:last-child { display: none; } }
+@media (max-width: 450px) { .camera-overlay { top: 15px; left: 15px; right: 15px; }.camera-readout { bottom: 15px; left: 15px; }.footage-caption { display: none; }.game-footer { font-size: 8px; } }
 
 .media-player-placeholder { position: absolute; inset: 18px; display: grid; place-content: center; justify-items: center; gap: 10px; padding: 30px; border: 1px dashed #526d58; color: #a9b9ad; text-align: center; background: rgba(18, 31, 24, .72); }.media-placeholder-kicker { color: #9fbd68; font: 10px 'DM Mono', monospace; letter-spacing: .15em; }.media-player-placeholder strong { color: #e8efe4; font: 600 clamp(20px, 3vw, 30px) 'Space Grotesk', sans-serif; letter-spacing: -.04em; }.media-placeholder-detail { max-width: 320px; color: #718178; font-size: 12px; }.media-slot-status { margin-top: 10px; padding: 6px 9px; color: #8aa882; border: 1px solid #3e5b42; font: 9px 'DM Mono', monospace; letter-spacing: .08em; }
 .map-group { margin-bottom: 20px; }
