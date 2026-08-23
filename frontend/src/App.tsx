@@ -3,7 +3,6 @@ import "./App.css";
 
 type Guess = "location" | "year" | "agency";
 
-const years = ["2017", "2019", "2021"];
 const agencies = ["Seattle Police", "King County Sheriff", "Washington State Patrol"];
 
 function ShieldIcon() {
@@ -109,10 +108,11 @@ function App() {
             </button>
             <p className="map-hint">{pin ? "Pin dropped — click anywhere to reposition" : "Click the map to place your best guess"}</p>
           </fieldset>
-          <fieldset className="guess-group">
-            <legend><b>02</b> Year</legend>
-            <div className="guess-options compact-options">
-              {years.map((item) => <button className={selection.year === item ? "option-button selected" : "option-button"} onClick={() => selectGuess("year", item)} type="button" key={item}>{item}</button>)}
+          <fieldset className="guess-group year-group">
+            <legend><b>02</b> Year <strong>{selection.year || "2021"}</strong></legend>
+            <div className="year-slider-wrap">
+              <input className="year-slider" type="range" min="1990" max="2024" value={selection.year || "2021"} onChange={(event) => selectGuess("year", event.target.value)} disabled={submitted} aria-label="Select the year" />
+              <div className="year-range-labels"><span>1990</span><span>2024</span></div>
             </div>
           </fieldset>
           <fieldset className="guess-group">
