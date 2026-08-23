@@ -1,9 +1,16 @@
-import { useState, type MouseEvent } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import "./App.css";
 
 type Guess = "location" | "year" | "agency";
 
 const agencies = ["Seattle Police", "King County Sheriff", "Washington State Patrol"];
+const rounds = [
+  { region: "Pacific Northwest", timestamp: "2021-07-14  16:42:08", camera: "AXON BODY 3  X83039472", scene: "scene-one" },
+  { region: "Mountain West", timestamp: "2019-10-03  08:17:41", camera: "BODYCAM 2  M44182910", scene: "scene-two" },
+  { region: "Gulf Coast", timestamp: "2020-06-22  22:05:16", camera: "AXON FLEX  X72910481", scene: "scene-three" },
+  { region: "Midwest", timestamp: "2018-03-11  13:29:52", camera: "BODYCAM 4  C61830277", scene: "scene-four" },
+  { region: "Southwest", timestamp: "2022-11-08  19:54:03", camera: "AXON BODY 3  A90177382", scene: "scene-five" },
+];
 
 function ShieldIcon() {
   return (
@@ -21,7 +28,9 @@ function GamePage() {
     agency: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [roundNumber, setRoundNumber] = useState(1);
   const [pin, setPin] = useState<{ column: number; row: number } | null>(null);
+  const round = rounds[roundNumber - 1];
   const complete = Boolean(pin) && selection.year !== "" && selection.agency !== "";
 
   function selectGuess(category: Guess, value: string) {
@@ -32,6 +41,7 @@ function GamePage() {
     setSelection({ location: "", year: "", agency: "" });
     setPin(null);
     setSubmitted(false);
+    setRoundNumber((current) => current === rounds.length ? 1 : current + 1);
   }
 
   function dropPin(event: MouseEvent<HTMLButtonElement>) {
@@ -51,8 +61,8 @@ function GamePage() {
         </a>
         <div className="round-progress" aria-label="Round 3 of 5">
           <span>ROUND</span>
-          <strong>03 <i>/</i> 05</strong>
-          <div className="progress-track"><span /></div>
+          <strong>{String(roundNumber).padStart(2, "0")} <i>/</i> 05</strong>
+          <div className="progress-track"><span className={`progress-fill progress-${roundNumber}`} /></div>
         </div>
         <button className="how-to-play" type="button">How to play <span>?</span></button>
       </header>
@@ -60,7 +70,7 @@ function GamePage() {
       <section className="round-layout">
         <div className="video-panel">
           <div className="footage-frame">
-            <div className="street-scene">
+            <div className={`street-scene ${round.scene}`}>
               <div className="building building-left" />
               <div className="building building-right" />
               <div className="street-sign" />
@@ -70,9 +80,9 @@ function GamePage() {
             </div>
             <div className="camera-overlay">
               <span className="recording-indicator"><i /> REC</span>
-              <span className="camera-time">2021-07-14&nbsp;&nbsp; 16:42:08</span>
+              <span className="camera-time">{round.timestamp}</span>
             </div>
-            <div className="camera-readout">AXON BODY 3&nbsp;&nbsp; X83039472</div>
+            <div className="camera-readout">{round.camera}</div>
             <button className="play-control" type="button" aria-label="Play footage"><span /></button>
             <div className="footage-caption">Bodycam footage — identity removed</div>
           </div>
@@ -136,13 +146,20 @@ function GamePage() {
 
       <footer className="game-footer">
         <span>CAMGUESSR <i>—</i> Train your eye. Test your instincts.</span>
-        <span>Round 03 <i>·</i> Pacific Northwest</span>
+        <span>Round {String(roundNumber).padStart(2, "0")} <i>·</i> {round.region}</span>
       </footer>
     </main>
   );
 }
 
 function LandingPage() {
+  const [snapshot, setSnapshot] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setSnapshot((current) => (current + 1) % 3), 4200);
+    return () => window.clearInterval(timer);
+  }, []);
+
   return (
     <main className="landing-shell">
       <header className="landing-header">
@@ -160,13 +177,13 @@ function LandingPage() {
           <a className="landing-play" href="/play">Play CamGuessr <span>→</span></a>
           <p className="landing-note"><span className="live-mark" /> Five rounds. One perfect read.</p>
         </div>
-        <div className="landing-visual" aria-label="CamGuessr bodycam preview">
+        <div className={`landing-visual snapshot-${snapshot + 1}`} aria-label="CamGuessr bodycam preview">
           <div className="landing-grid" />
           <div className="landing-scene">
             <div className="landing-building landing-building-one" /><div className="landing-building landing-building-two" /><div className="landing-road" /><div className="landing-lamp" /><div className="landing-person" />
           </div>
-          <div className="landing-stamp">PNW<br /><strong>01</strong></div>
-          <div className="landing-rec"><i /> BODYCAM / 16:42:08</div>
+          <div className="landing-stamp">{snapshot === 0 ? "PNW" : snapshot === 1 ? "MTN" : "GULF"}<br /><strong>0{snapshot + 1}</strong></div>
+          <div className="landing-rec"><i /> BODYCAM / {snapshot === 0 ? "16:42:08" : snapshot === 1 ? "08:17:41" : "22:05:16"}</div>
           <div className="landing-caption">EVERY FRAME<br /><span>IS A CLUE</span></div>
         </div>
       </section>
