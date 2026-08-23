@@ -97,8 +97,6 @@ function GamePage() {
         <aside className="guess-card">
           <div className="guess-heading">
             <p>YOUR CASE NOTES</p>
-            <h1>Where and when<br />was this filmed?</h1>
-            <span>Use the visual details to make your best call.</span>
           </div>
 
           <fieldset className="guess-group map-group">
