@@ -95,7 +95,13 @@ function GamePage() {
           <strong>{String(roundNumber).padStart(2, "0")} <i>/</i> 05</strong>
           <div className="progress-track"><span className={`progress-fill progress-${roundNumber}`} /></div>
         </div>
-        <button className="how-to-play" type="button">How to play <span>?</span></button>
+        <button className="how-to-play" type="button" aria-label="How to play">
+          How to play <span>?</span>
+          <span className="how-to-tooltip" role="tooltip">
+            <strong>How to play</strong>
+            <span>Watch the footage, drop a map pin, choose the year and agency, then lock in your guess.</span>
+          </span>
+        </button>
       </header>
 
       <section className="round-layout">
@@ -154,10 +160,6 @@ function GamePage() {
         </aside>
       </section>
 
-      <footer className="game-footer">
-        <span>CAMGUESSR <i>—</i> Train your eye. Test your instincts.</span>
-        <span>Round {String(roundNumber).padStart(2, "0")} <i>·</i> {round.region}</span>
-      </footer>
     </main>
   );
 }
