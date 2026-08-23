@@ -97,22 +97,13 @@ function GamePage() {
       <section className="round-layout">
         <div className="video-panel">
           <div className="footage-frame">
-            <div className="media-player-placeholder" data-player-slot="bodycam-footage">
-              <span className="media-placeholder-kicker">MULTIMEDIA PLAYER SLOT</span>
-              <strong>Bodycam footage will appear here</strong>
-              <span className="media-placeholder-detail">Mount your preferred video player in this space.</span>
-              <span className="media-slot-status">READY FOR PLAYER INTEGRATION</span>
-            </div>
-            <div className="camera-overlay">
-              <span className="recording-indicator"><i /> REC</span>
-              <span className="camera-time">{round.timestamp}</span>
-            </div>
-            <div className="camera-readout">{round.camera}</div>
-            <div className="footage-caption">Bodycam footage — identity removed</div>
-          </div>
-          <div className="clip-meta">
-            <span><i className="status-dot" /> Player slot ready</span>
-            <span>Awaiting media source</span>
+            <video
+              className="game-video"
+              src="/media/bodycam1.mp4"
+              controls
+              playsInline
+              preload="metadata"
+            />
           </div>
         </div>
 
