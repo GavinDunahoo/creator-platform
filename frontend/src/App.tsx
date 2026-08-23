@@ -117,8 +117,12 @@ function App() {
           </fieldset>
           <fieldset className="guess-group">
             <legend><b>03</b> Agency</legend>
-            <div className="guess-options">
-              {agencies.map((item) => <button className={selection.agency === item ? "option-button selected" : "option-button"} onClick={() => selectGuess("agency", item)} type="button" key={item}>{item}</button>)}
+            <div className="agency-select-wrap">
+              <select className="agency-select" value={selection.agency} onChange={(event) => selectGuess("agency", event.target.value)} disabled={submitted} aria-label="Select the agency">
+                <option value="" disabled>Select an agency</option>
+                {agencies.map((item) => <option value={item} key={item}>{item}</option>)}
+              </select>
+              <span className="select-chevron">⌄</span>
             </div>
           </fieldset>
 
