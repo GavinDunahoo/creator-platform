@@ -5,11 +5,11 @@ type Guess = "location" | "year" | "agency";
 
 const agencies = ["Seattle Police", "King County Sheriff", "Washington State Patrol"];
 const rounds = [
-  { region: "Pacific Northwest", timestamp: "2021-07-14  16:42:08", camera: "AXON BODY 3  X83039472", scene: "scene-one" },
-  { region: "Mountain West", timestamp: "2019-10-03  08:17:41", camera: "BODYCAM 2  M44182910", scene: "scene-two" },
-  { region: "Gulf Coast", timestamp: "2020-06-22  22:05:16", camera: "AXON FLEX  X72910481", scene: "scene-three" },
-  { region: "Midwest", timestamp: "2018-03-11  13:29:52", camera: "BODYCAM 4  C61830277", scene: "scene-four" },
-  { region: "Southwest", timestamp: "2022-11-08  19:54:03", camera: "AXON BODY 3  A90177382", scene: "scene-five" },
+  { region: "Pacific Northwest", timestamp: "2021-07-14  16:42:08", camera: "AXON BODY 3  X83039472", scene: "scene-one", answerColumn: 2, answerRow: 2, correctYear: "2021", distance: "18 mi", answerLocation: "Seattle, WA" },
+  { region: "Mountain West", timestamp: "2019-10-03  08:17:41", camera: "BODYCAM 2  M44182910", scene: "scene-two", answerColumn: 4, answerRow: 1, correctYear: "2019", distance: "42 mi", answerLocation: "Boise, ID" },
+  { region: "Gulf Coast", timestamp: "2020-06-22  22:05:16", camera: "AXON FLEX  X72910481", scene: "scene-three", answerColumn: 3, answerRow: 3, correctYear: "2020", distance: "27 mi", answerLocation: "Houston, TX" },
+  { region: "Midwest", timestamp: "2018-03-11  13:29:52", camera: "BODYCAM 4  C61830277", scene: "scene-four", answerColumn: 1, answerRow: 2, correctYear: "2018", distance: "64 mi", answerLocation: "Chicago, IL" },
+  { region: "Southwest", timestamp: "2022-11-08  19:54:03", camera: "AXON BODY 3  A90177382", scene: "scene-five", answerColumn: 5, answerRow: 3, correctYear: "2022", distance: "11 mi", answerLocation: "Phoenix, AZ" },
 ];
 
 function ShieldIcon() {
@@ -32,6 +32,7 @@ function GamePage() {
   const [pin, setPin] = useState<{ column: number; row: number } | null>(null);
   const round = rounds[roundNumber - 1];
   const complete = Boolean(pin) && selection.year !== "" && selection.agency !== "";
+  const pinPoint = (column: number, row: number) => ({ x: 17 + (column - 1) * 16.5, y: 20 + (row - 1) * 20 });
 
   function selectGuess(category: Guess, value: string) {
     if (!submitted) setSelection((current) => ({ ...current, [category]: value }));
@@ -113,10 +114,12 @@ function GamePage() {
               <span className="map-label map-label-three">Bellevue</span>
               <span className="map-control map-plus">+</span>
               <span className="map-control map-minus">−</span>
+              {submitted && pin ? <svg className="answer-connector" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1={pinPoint(pin.column, pin.row).x} y1={pinPoint(pin.column, pin.row).y} x2={pinPoint(round.answerColumn, round.answerRow).x} y2={pinPoint(round.answerColumn, round.answerRow).y} /></svg> : null}
               {pin ? <span className={`dropped-pin pin-column-${pin.column} pin-row-${pin.row}`}><i /></span> : null}
+              {submitted ? <span className={`answer-pin pin-column-${round.answerColumn} pin-row-${round.answerRow}`}><i /></span> : null}
               <span className="map-provider">Google Maps</span>
             </button>
-            <p className="map-hint">{pin ? "Pin dropped — click anywhere to reposition" : "Click the map to place your best guess"}</p>
+            <p className="map-hint">{submitted ? `Answer: ${round.answerLocation}` : pin ? "Pin dropped — click anywhere to reposition" : "Click the map to place your best guess"}</p>
           </fieldset>
           <fieldset className="guess-group year-group">
             <legend><b>02</b> Year <strong>{selection.year || "2021"}</strong></legend>
@@ -137,7 +140,7 @@ function GamePage() {
           </fieldset>
 
           {submitted ? (
-            <div className="result-panel"><strong>Case submitted.</strong><span>Your deductions have been logged.</span></div>
+            <div className="result-panel"><div className="result-title"><strong>Round {String(roundNumber).padStart(2, "0")} results</strong><span>{round.distance} from the answer</span></div><div className="result-details"><span><b>ANSWER</b>{round.answerLocation}</span><span><b>YEAR</b>{selection.year} <i>→</i> {round.correctYear}</span></div></div>
           ) : null}
           <button className="submit-guess" type="button" disabled={!complete} onClick={() => setSubmitted(true)}>{submitted ? "Guess submitted" : "Lock in guess"}<span>→</span></button>
           {submitted ? <button className="next-round" type="button" onClick={newRound}>Start next round</button> : null}
