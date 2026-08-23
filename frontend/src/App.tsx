@@ -5,11 +5,11 @@ type Guess = "location" | "year" | "agency";
 
 const agencies = ["Seattle Police", "King County Sheriff", "Washington State Patrol"];
 const rounds = [
-  { region: "Pacific Northwest", timestamp: "2021-07-14  16:42:08", camera: "AXON BODY 3  X83039472", scene: "scene-one", answerColumn: 2, answerRow: 2, correctYear: "2021", distance: "18 mi", answerLocation: "Seattle, WA" },
-  { region: "Mountain West", timestamp: "2019-10-03  08:17:41", camera: "BODYCAM 2  M44182910", scene: "scene-two", answerColumn: 4, answerRow: 1, correctYear: "2019", distance: "42 mi", answerLocation: "Boise, ID" },
-  { region: "Gulf Coast", timestamp: "2020-06-22  22:05:16", camera: "AXON FLEX  X72910481", scene: "scene-three", answerColumn: 3, answerRow: 3, correctYear: "2020", distance: "27 mi", answerLocation: "Houston, TX" },
-  { region: "Midwest", timestamp: "2018-03-11  13:29:52", camera: "BODYCAM 4  C61830277", scene: "scene-four", answerColumn: 1, answerRow: 2, correctYear: "2018", distance: "64 mi", answerLocation: "Chicago, IL" },
-  { region: "Southwest", timestamp: "2022-11-08  19:54:03", camera: "AXON BODY 3  A90177382", scene: "scene-five", answerColumn: 5, answerRow: 3, correctYear: "2022", distance: "11 mi", answerLocation: "Phoenix, AZ" },
+  { region: "Pacific Northwest", timestamp: "2021-07-14  16:42:08", camera: "AXON BODY 3  X83039472", scene: "scene-one", answerColumn: 2, answerRow: 2, correctYear: "2021", distance: "18 mi", answerLocation: "Seattle, WA", correctAgency: "Seattle Police" },
+  { region: "Mountain West", timestamp: "2019-10-03  08:17:41", camera: "BODYCAM 2  M44182910", scene: "scene-two", answerColumn: 4, answerRow: 1, correctYear: "2019", distance: "42 mi", answerLocation: "Boise, ID", correctAgency: "Ada County Sheriff" },
+  { region: "Gulf Coast", timestamp: "2020-06-22  22:05:16", camera: "AXON FLEX  X72910481", scene: "scene-three", answerColumn: 3, answerRow: 3, correctYear: "2020", distance: "27 mi", answerLocation: "Houston, TX", correctAgency: "Houston Police" },
+  { region: "Midwest", timestamp: "2018-03-11  13:29:52", camera: "BODYCAM 4  C61830277", scene: "scene-four", answerColumn: 1, answerRow: 2, correctYear: "2018", distance: "64 mi", answerLocation: "Chicago, IL", correctAgency: "Chicago Police" },
+  { region: "Southwest", timestamp: "2022-11-08  19:54:03", camera: "AXON BODY 3  A90177382", scene: "scene-five", answerColumn: 5, answerRow: 3, correctYear: "2022", distance: "11 mi", answerLocation: "Phoenix, AZ", correctAgency: "Phoenix Police" },
 ];
 
 function ShieldIcon() {
@@ -140,7 +140,7 @@ function GamePage() {
           </fieldset>
 
           {submitted ? (
-            <div className="result-panel"><div className="result-title"><strong>Round {String(roundNumber).padStart(2, "0")} results</strong><span>{round.distance} from the answer</span></div><div className="result-details"><span><b>ANSWER</b>{round.answerLocation}</span><span><b>YEAR</b>{selection.year} <i>→</i> {round.correctYear}</span></div></div>
+            <div className="result-panel"><div className="result-title"><strong>Round {String(roundNumber).padStart(2, "0")} results</strong><span>{round.distance} from the answer</span></div><div className="result-details"><span><b>ANSWER</b>{round.answerLocation}</span><span><b>YEAR</b>{selection.year} <i>→</i> {round.correctYear}</span><span><b>AGENCY</b>{selection.agency} <i>→</i> {round.correctAgency}</span></div></div>
           ) : null}
           <button className="submit-guess" type="button" disabled={!complete} onClick={() => setSubmitted(true)}>{submitted ? "Guess submitted" : "Lock in guess"}<span>→</span></button>
           {submitted ? <button className="next-round" type="button" onClick={newRound}>Start next round</button> : null}
