@@ -63,12 +63,13 @@ function GamePage() {
       googleMap.current = map;
       map.addListener("zoom_changed", () => setMapZoom(map.getZoom() ?? 11));
       map.addListener("click", (event: any) => {
-        if (submitted || !event.latLng || guessMarker.current) return;
+        if (submitted || !event.latLng) return;
         const bounds = mapElement.current?.getBoundingClientRect();
         if (!bounds) return;
         const domEvent = event.domEvent as globalThis.MouseEvent;
         setPin({ column: Math.min(5, Math.max(1, Math.floor(((domEvent.clientX - bounds.left) / bounds.width) * 6) + 1)), row: Math.min(4, Math.max(1, Math.floor(((domEvent.clientY - bounds.top) / bounds.height) * 5) + 1)) });
-        guessMarker.current = new window.google.maps.Marker({ map, position: event.latLng, title: "Your guess" });
+        if (guessMarker.current) guessMarker.current.setPosition(event.latLng);
+        else guessMarker.current = new window.google.maps.Marker({ map, position: event.latLng, title: "Your guess" });
       });
     };
     if (window.google) initializeMap();
