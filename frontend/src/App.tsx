@@ -37,6 +37,7 @@ function GamePage() {
   const [mapZoom, setMapZoom] = useState(11);
   const mapElement = useRef<HTMLDivElement>(null);
   const googleMap = useRef<any>(null);
+  const guessMarker = useRef<any>(null);
   const round = rounds[roundNumber - 1];
   const complete = Boolean(pin) && selection.year !== "" && selection.agency !== "";
   const pinPoint = (column: number, row: number) => ({ x: 17 + (column - 1) * 16.5, y: 20 + (row - 1) * 20 });
@@ -47,6 +48,8 @@ function GamePage() {
 
   function newRound() {
     setSelection({ location: "", year: "", agency: "" });
+    guessMarker.current?.setMap(null);
+    guessMarker.current = null;
     setPin(null);
     setMapZoom(11);
     setSubmitted(false);
@@ -60,12 +63,12 @@ function GamePage() {
       googleMap.current = map;
       map.addListener("zoom_changed", () => setMapZoom(map.getZoom() ?? 11));
       map.addListener("click", (event: any) => {
-        if (submitted || !event.latLng) return;
+        if (submitted || !event.latLng || guessMarker.current) return;
         const bounds = mapElement.current?.getBoundingClientRect();
         if (!bounds) return;
         const domEvent = event.domEvent as globalThis.MouseEvent;
         setPin({ column: Math.min(5, Math.max(1, Math.floor(((domEvent.clientX - bounds.left) / bounds.width) * 6) + 1)), row: Math.min(4, Math.max(1, Math.floor(((domEvent.clientY - bounds.top) / bounds.height) * 5) + 1)) });
-        new window.google.maps.Marker({ map, position: event.latLng, title: "Your guess" });
+        guessMarker.current = new window.google.maps.Marker({ map, position: event.latLng, title: "Your guess" });
       });
     };
     if (window.google) initializeMap();
@@ -122,7 +125,7 @@ function GamePage() {
               <div className="map-zoom-controls"><button type="button" onClick={() => googleMap.current?.setZoom(Math.min(19, (googleMap.current.getZoom() ?? mapZoom) + 1))} aria-label="Zoom in">+</button><button type="button" onClick={() => googleMap.current?.setZoom(Math.max(1, (googleMap.current.getZoom() ?? mapZoom) - 1))} aria-label="Zoom out">−</button></div>
               <span className="map-provider">Google Maps</span>
             </div>
-            <p className="map-hint">{submitted ? `Answer: ${round.answerLocation}` : pin ? "Drag or scroll to explore · click to reposition" : "Click and hold to drag · scroll to zoom · click to pin"}</p>
+            <p className="map-hint">{submitted ? `Answer: ${round.answerLocation}` : pin ? "Pin placed · drag or scroll to explore" : "Click and hold to drag · scroll to zoom · click to pin"}</p>
           </fieldset>
           <fieldset className="guess-group year-group">
             <legend><b>02</b> Year <strong>{selection.year || "2021"}</strong></legend>
