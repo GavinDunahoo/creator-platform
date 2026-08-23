@@ -95,7 +95,13 @@ function GamePage() {
           <strong>{String(roundNumber).padStart(2, "0")} <i>/</i> 05</strong>
           <div className="progress-track"><span className={`progress-fill progress-${roundNumber}`} /></div>
         </div>
-        <button className="how-to-play" type="button">How to play <span>?</span></button>
+        <button className="how-to-play" type="button" aria-label="How to play">
+          How to play <span>?</span>
+          <span className="how-to-tooltip" role="tooltip">
+            <strong>How to play</strong>
+            <span>Watch the footage, drop a map pin, choose the year and agency, then lock in your guess.</span>
+          </span>
+        </button>
       </header>
 
       <section className="round-layout">
@@ -154,10 +160,6 @@ function GamePage() {
         </aside>
       </section>
 
-      <footer className="game-footer">
-        <span>CAMGUESSR <i>—</i> Train your eye. Test your instincts.</span>
-        <span>Round {String(roundNumber).padStart(2, "0")} <i>·</i> {round.region}</span>
-      </footer>
     </main>
   );
 }
@@ -186,7 +188,6 @@ function LandingPage() {
       </section>
       <section className="landing-details" id="how-it-works"><div className="section-heading"><p className="eyebrow">HOW IT WORKS</p><h2>How to play.</h2></div><div className="detail-card"><strong>01</strong><span className="detail-icon">◉</span><p><b>Watch the footage</b><br />Look for signs, businesses, road markings, architecture, and other location clues.</p></div><div className="detail-card"><strong>02</strong><span className="detail-icon">⌖</span><p><b>Make your guess</b><br />Drop a pin, set the year, and choose the agency.</p></div><div className="detail-card"><strong>03</strong><span className="detail-icon">↗</span><p><b>See how close you were</b><br />Reveal the answer and earn points based on distance.</p></div></section>
       <section className="mode-section" id="modes"><div className="section-heading"><p className="eyebrow">CHOOSE YOUR RUN</p><h2>Pick a way to play.</h2></div><div className="mode-grid"><a className="mode-card mode-featured" href="/play"><span className="mode-number">01</span><span className="mode-arrow">↗</span><h3>Classic</h3><p>Five random bodycam locations. How sharp is your eye?</p><span className="mode-link">PLAY NOW</span></a><a className="mode-card" href="/play"><span className="mode-number">02</span><span className="mode-arrow">↗</span><h3>Daily Challenge</h3><p>Everyone gets the same locations. Compare your score.</p><span className="mode-link">COMING SOON</span></a><a className="mode-card" href="/play"><span className="mode-number">03</span><span className="mode-arrow">↗</span><h3>Multiplayer</h3><p>Challenge friends and see who can read the scene fastest.</p><span className="mode-link">COMING SOON</span></a></div></section>
-      <footer className="landing-footer"><span>CAMGUESSR <i>—</i> Train your eye. Test your instincts.</span><span>Built for the curious.</span></footer>
     </main>
   );
 }
